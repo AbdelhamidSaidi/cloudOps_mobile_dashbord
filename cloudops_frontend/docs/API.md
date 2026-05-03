@@ -73,6 +73,61 @@ This document lists the backend endpoints the mobile frontend calls and the expe
     { "id": "s2", "device": "Windows Desktop", "last_seen": "2026-05-01T18:00:00Z" }
   ]
 }
+
+  ---
+
+  ## Authentication Endpoints
+
+  1) POST /api/v1/auth/login
+  - Description: Authenticate a user and return access (and optionally refresh) tokens.
+  - Request body (application/json):
+
+  ```json
+  { "email": "user@example.com", "password": "secret" }
+  ```
+
+  - Response (200):
+
+  ```json
+  {
+    "access_token": "<jwt>",
+    "refresh_token": "<refresh-token>",
+    "expires_in": 3600
+  }
+  ```
+
+  2) POST /api/v1/auth/refresh
+  - Description: Exchange a refresh token for a new access token.
+  - Request body:
+
+  ```json
+  { "refresh_token": "<refresh-token>" }
+  ```
+
+  - Response (200):
+
+  ```json
+  { "access_token": "<jwt>", "refresh_token": "<new-refresh>", "expires_in": 3600 }
+  ```
+
+  3) POST /api/v1/auth/logout
+  - Description: Invalidate current access (and refresh) tokens.
+  - Auth: Bearer token required in `Authorization` header.
+  - Response: `204 No Content` or `200` on success.
+
+  4) GET /api/v1/auth/me
+  - Description: Return the authenticated user's profile.
+  - Auth: Bearer token required.
+  - Response (200):
+
+  ```json
+  { "id": "123", "name": "Alex Rivera", "email": "alex@cloudops.internal" }
+  ```
+
+  Notes:
+  - Use standard HTTP status codes. Return `401` for invalid/expired tokens.
+  - Use secure, HttpOnly cookies or Authorization headers depending on client needs. The mobile app currently expects `Authorization: Bearer <token>`.
+
 ```
 
 ---
