@@ -27,6 +27,39 @@ This document lists the backend endpoints the mobile frontend calls and the expe
 
 - Fields used by the app: `user.name`, `user.email`, `user.role`, `user.location`, `user.joined_at`, `user.avatar_url`.
 
+
+5) PATCH /api/v1/profile
+- Description: Update the authenticated user's profile fields. Accepts partial updates; only provided fields are changed.
+- Request body (application/json):
+
+```json
+{
+  "name": "New Name",
+  "role": "Engineer",
+  "location": "Austin, TX",
+  "avatar_url": "https://example.com/avatar.jpg"
+}
+```
+
+- Response (200):
+
+```json
+{
+  "user": { /* updated user object, same shape as /profile */ }
+}
+```
+
+6) POST /api/v1/profile/avatar
+- Description: Uploads a new avatar image for the user. Accepts `multipart/form-data` with an `avatar` file field. Returns the updated user.
+- Request: multipart POST with `avatar` file field.
+- Response (200):
+
+```json
+{
+  "user": { /* updated user object */ }
+}
+```
+
 ---
 
 2) GET /api/v1/settings

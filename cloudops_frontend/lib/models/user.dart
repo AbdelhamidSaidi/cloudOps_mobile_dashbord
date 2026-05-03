@@ -28,4 +28,16 @@ class User {
       avatarUrl: json['avatar_url'] as String? ?? json['avatarUrl'] as String?,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'email': email,
+      if (role != null) 'role': role,
+      if (location != null) 'location': location,
+      if (joinedAt != null) 'joined_at': joinedAt,
+      if (avatarUrl != null) 'avatar_url': avatarUrl,
+    };
+  }
 }

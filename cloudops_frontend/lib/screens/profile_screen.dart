@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'dart:ui';
 import '../models/user.dart';
 import '../services/api_service.dart';
+import '../services/auth_service.dart';
+import '../services/theme_service.dart';
 import '../widgets/setting_card.dart';
 import '../widgets/section_header.dart';
 import '../widgets/theme_tile.dart';
 import '../theme.dart';
+import 'edit_profile_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -15,9 +19,11 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final ApiService _api = ApiService();
+  final AuthService _auth = AuthService();
   User? _user;
   bool _loading = true;
   bool _darkActive = true;
+  late VoidCallback _themeListener;
   bool _criticalAlerts = true;
   bool _weeklyReport = false;
 
@@ -25,6 +31,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     _loadProfile();
+    _darkActive = ThemeService.darkMode.value;
+    _themeListener = () {
+      if (mounted) setState(() => _darkActive = ThemeService.darkMode.value);
+    };
+    ThemeService.darkMode.addListener(_themeListener);
+  }
+
+  @override
+  void dispose() {
+    ThemeService.darkMode.removeListener(_themeListener);
+    super.dispose();
   }
 
   Future<void> _loadProfile() async {
@@ -43,20 +60,43 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      backgroundColor: AppColors.surface,
+      backgroundColor: isDark ? GlassColors.darkBg : GlassColors.lightBg,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: isDark
+            ? const Color(0x1AF5F5F5)
+            : const Color(0x26FFFFFF),
         elevation: 0,
+        flexibleSpace: ClipRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Container(),
+          ),
+        ),
         title: Row(
           children: [
-            Container(
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: AppColors.panel,
-                borderRadius: BorderRadius.circular(6),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(6),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+                child: Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? const Color(0x2DF5F5F5)
+                        : const Color(0x4DFFFFFF),
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(
+                      color: isDark
+                          ? const Color(0x4DF5F5F5)
+                          : const Color(0x80E0E5FF),
+                      width: 1,
+                    ),
+                  ),
+                  child: const Icon(Icons.cloud, size: 20),
+                ),
               ),
-              child: const Icon(Icons.cloud, size: 20),
             ),
             const SizedBox(width: 8),
             const Text('CloudOps'),
@@ -84,10 +124,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               width: 110,
                               height: 110,
                               decoration: BoxDecoration(
-                                color: AppColors.card,
+                                color: isDark
+                                    ? const Color(0xFF111827)
+                                    : Colors.white,
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
-                                  color: AppColors.panel,
+                                  color: isDark
+                                      ? const Color(0x4DF5F5F5)
+                                      : const Color(0x80E0E5FF),
                                   width: 3,
                                 ),
                                 boxShadow: [
@@ -106,7 +150,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         fit: BoxFit.cover,
                                       )
                                     : Container(
-                                        color: AppColors.panel,
+                                        color: isDark
+                                            ? const Color(0x4DF5F5F5)
+                                            : const Color(0x80E0E5FF),
                                         child: const Icon(
                                           Icons.person,
                                           size: 48,
@@ -128,7 +174,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ).colorScheme.secondary,
                                     shape: BoxShape.circle,
                                     border: Border.all(
-                                      color: AppColors.panel,
+                                      color: isDark
+                                          ? const Color(0x4DF5F5F5)
+                                          : const Color(0x80E0E5FF),
                                       width: 2,
                                     ),
                                   ),
@@ -154,7 +202,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.panel,
+                            color: isDark
+                                ? const Color(0x4DF5F5F5)
+                                : const Color(0x80E0E5FF),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(_user?.role ?? ''),
@@ -191,7 +241,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         const SizedBox(height: 12),
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            final updated = await Navigator.push<User?>(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => EditProfileScreen(user: _user),
+                              ),
+                            );
+                            if (updated != null) {
+                              setState(() => _user = updated);
+                            }
+                          },
                           child: const Text('EDIT PROFILE'),
                         ),
                       ],
@@ -245,8 +305,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               child: ThemeTile(
                                 label: 'LIGHT',
                                 active: !_darkActive,
-                                onTap: () =>
-                                    setState(() => _darkActive = false),
+                                onTap: () => ThemeService.setDark(false),
                               ),
                             ),
                             const SizedBox(width: 12),
@@ -254,7 +313,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               child: ThemeTile(
                                 label: 'DARK ACTIVE',
                                 active: _darkActive,
-                                onTap: () => setState(() => _darkActive = true),
+                                onTap: () => ThemeService.setDark(true),
                               ),
                             ),
                           ],
@@ -291,7 +350,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           height: 80,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
-                            color: AppColors.panel,
+                            color: isDark
+                                ? const Color(0x4DF5F5F5)
+                                : const Color(0x80E0E5FF),
                           ),
                           alignment: Alignment.center,
                           child: const Text(
@@ -314,9 +375,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(height: 16),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.danger,
+                      backgroundColor: GlassColors.danger,
                     ),
-                    onPressed: () {},
+                    onPressed: () async {
+                      final navigator = Navigator.of(context);
+                      final messenger = ScaffoldMessenger.of(context);
+                      final token = await _auth.getSavedAccessToken();
+                      final ok = await _auth.logout(token);
+                      if (!mounted) return;
+                      if (ok) {
+                        navigator.pushReplacementNamed('/login');
+                      } else {
+                        messenger.showSnackBar(
+                          const SnackBar(content: Text('Logout failed')),
+                        );
+                      }
+                    },
                     child: const Padding(
                       padding: EdgeInsets.symmetric(vertical: 12),
                       child: Text('LOG OUT OF CLOUDOPS'),
@@ -327,14 +401,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Center(
                     child: Text(
                       'CloudOps Platform v4.2.0-stable',
-                      style: TextStyle(color: AppColors.muted),
+                      style: TextStyle(
+                        color: isDark ? Colors.white54 : Colors.black54,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 4),
                   Center(
                     child: Text(
                       'UUID: f47ac10b-58cc-4372-a567-0e02b2c3d479',
-                      style: TextStyle(color: AppColors.muted, fontSize: 12),
+                      style: TextStyle(
+                        color: isDark ? Colors.white38 : Colors.black38,
+                        fontSize: 12,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 40),
