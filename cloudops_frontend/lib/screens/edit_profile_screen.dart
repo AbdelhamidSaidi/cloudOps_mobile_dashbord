@@ -140,11 +140,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     items: _selectedCountry == null
                         ? <DropdownMenuItem<String>>[]
                         : _countryCities[_selectedCountry]!
-                            .map((city) => DropdownMenuItem(
+                              .map(
+                                (city) => DropdownMenuItem(
                                   value: city,
                                   child: Text(city),
-                                ))
-                            .toList(),
+                                ),
+                              )
+                              .toList(),
                     onChanged: _selectedCountry == null
                         ? null
                         : (v) => setState(() => _selectedCity = v),
