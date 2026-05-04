@@ -5,7 +5,7 @@ import '../models/incident.dart';
 
 class IncidentsScreen extends StatefulWidget {
   final List<IncidentData> incidents;
-  
+
   const IncidentsScreen({super.key, required this.incidents});
 
   @override
@@ -17,14 +17,18 @@ class _IncidentsScreenState extends State<IncidentsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final items = widget.incidents.isEmpty 
+    final items = widget.incidents.isEmpty
         ? List.generate(6, (i) => _Incident.mock(i + 1))
-        : widget.incidents.map((e) => _Incident(e.id, e.title, e.service, e.severity, e.age)).toList();
-    
+        : widget.incidents
+              .map(
+                (e) => _Incident(e.id, e.title, e.service, e.severity, e.age),
+              )
+              .toList();
+
     final filtered = _selectedPriority == null
         ? items
         : items.where((e) => e.severity == _selectedPriority).toList();
-    
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: SafeArea(
@@ -56,12 +60,18 @@ class _IncidentsScreenState extends State<IncidentsScreen> {
                         },
                         backgroundColor: Colors.transparent,
                         side: BorderSide(
-                          color: isSelected ? Theme.of(context).colorScheme.secondary : Colors.white30,
+                          color: isSelected
+                              ? Theme.of(context).colorScheme.secondary
+                              : Colors.white30,
                           width: isSelected ? 2 : 1,
                         ),
                         labelStyle: TextStyle(
-                          color: isSelected ? Theme.of(context).colorScheme.secondary : Colors.white70,
-                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                          color: isSelected
+                              ? Theme.of(context).colorScheme.secondary
+                              : Colors.white70,
+                          fontWeight: isSelected
+                              ? FontWeight.w600
+                              : FontWeight.w500,
                         ),
                       ),
                     );

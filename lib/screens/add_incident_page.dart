@@ -3,8 +3,14 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class AddIncidentPage extends StatefulWidget {
-  final Function(String title, String description, String priority, String service) onAddIncident;
-  
+  final Function(
+    String title,
+    String description,
+    String priority,
+    String service,
+  )
+  onAddIncident;
+
   const AddIncidentPage({super.key, required this.onAddIncident});
 
   @override
@@ -27,7 +33,12 @@ class _AddIncidentPageState extends State<AddIncidentPage> {
 
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
-    widget.onAddIncident(_titleCtrl.text.trim(), _descCtrl.text.trim(), _priority, _service ?? '');
+    widget.onAddIncident(
+      _titleCtrl.text.trim(),
+      _descCtrl.text.trim(),
+      _priority,
+      _service ?? '',
+    );
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text('Incident created!')));

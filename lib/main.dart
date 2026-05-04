@@ -86,15 +86,23 @@ class _MainShellState extends State<MainShell> {
   int _selectedIndex = 0;
   final List<IncidentData> _incidents = [];
 
-  void _addIncident(String title, String description, String priority, String service) {
+  void _addIncident(
+    String title,
+    String description,
+    String priority,
+    String service,
+  ) {
     setState(() {
-      _incidents.insert(0, IncidentData(
-        id: 'INC-${DateTime.now().millisecondsSinceEpoch}',
-        title: title,
-        service: service,
-        severity: priority.split(' - ').first,
-        age: 'now',
-      ));
+      _incidents.insert(
+        0,
+        IncidentData(
+          id: 'INC-${DateTime.now().millisecondsSinceEpoch}',
+          title: title,
+          service: service,
+          severity: priority.split(' - ').first,
+          age: 'now',
+        ),
+      );
     });
   }
 
@@ -107,7 +115,7 @@ class _MainShellState extends State<MainShell> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     final pages = <Widget>[
       const Center(child: Text('Dashboard')),
       IncidentsScreen(incidents: _incidents),
@@ -127,7 +135,8 @@ class _MainShellState extends State<MainShell> {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (_) => AddIncidentPage(onAddIncident: _addIncident),
+                      builder: (_) =>
+                          AddIncidentPage(onAddIncident: _addIncident),
                     ),
                   );
                 },
