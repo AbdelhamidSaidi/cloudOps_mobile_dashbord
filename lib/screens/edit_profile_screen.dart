@@ -117,7 +117,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   // Country selector
                   DropdownButtonFormField<String>(
                     decoration: const InputDecoration(labelText: 'Country'),
-                    value: _selectedCountry,
+                    initialValue: _selectedCountry,
                     items: _countryCities.keys
                         .map((c) => DropdownMenuItem(value: c, child: Text(c)))
                         .toList(),
@@ -136,7 +136,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   // City selector
                   DropdownButtonFormField<String>(
                     decoration: const InputDecoration(labelText: 'City'),
-                    value: _selectedCity,
+                    initialValue: _selectedCity,
                     items: _selectedCountry == null
                         ? <DropdownMenuItem<String>>[]
                         : _countryCities[_selectedCountry]!

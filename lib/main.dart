@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'screens/profile_screen.dart';
+import 'screens/incidents_screen.dart';
+import 'screens/add_incident_page.dart';
 import 'screens/login_screen.dart';
 import 'services/auth_service.dart';
 import 'services/theme_service.dart';
+import 'models/incident.dart';
 import 'theme.dart';
 
 void main() async {
@@ -81,13 +84,19 @@ class MainShell extends StatefulWidget {
 
 class _MainShellState extends State<MainShell> {
   int _selectedIndex = 0;
+  final List<IncidentData> _incidents = [];
 
-  static const List<Widget> _pages = <Widget>[
-    Center(child: Text('Dashboard')),
-    Center(child: Text('Incidents')),
-    Center(child: Text('Alerts')),
-    ProfileScreen(),
-  ];
+  void _addIncident(String title, String description, String priority, String service) {
+    setState(() {
+      _incidents.insert(0, IncidentData(
+        id: 'INC-${DateTime.now().millisecondsSinceEpoch}',
+        title: title,
+        service: service,
+        severity: priority.split(' - ').first,
+        age: 'now',
+      ));
+    });
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -98,10 +107,33 @@ class _MainShellState extends State<MainShell> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    final pages = <Widget>[
+      const Center(child: Text('Dashboard')),
+      IncidentsScreen(incidents: _incidents),
+      const Center(child: Text('Alerts')),
+      const ProfileScreen(),
+    ];
+
     return Scaffold(
       body: Stack(
         children: [
-          SafeArea(child: _pages[_selectedIndex]),
+          SafeArea(child: pages[_selectedIndex]),
+          if (_selectedIndex == 1)
+            Positioned(
+              right: 18,
+              bottom: 82,
+              child: FloatingActionButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => AddIncidentPage(onAddIncident: _addIncident),
+                    ),
+                  );
+                },
+                child: const Icon(Icons.add),
+              ),
+            ),
           // Glassmorphic bottom navigation
           Positioned(
             left: 0,
