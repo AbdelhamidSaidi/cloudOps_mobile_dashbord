@@ -131,6 +131,7 @@ class _MainShellState extends State<MainShell> {
       DashboardScreen(
         incidents: _incidents,
         onViewAllAlerts: () => _onItemTapped(2),
+        onOpenIncidents: () => _onItemTapped(1),
       ),
       IncidentsScreen(
         incidents: _incidents,

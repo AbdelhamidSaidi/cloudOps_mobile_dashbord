@@ -12,11 +12,14 @@ class DashboardScreen extends StatefulWidget {
 
   /// Switches shell to Alerts tab (optional).
   final VoidCallback? onViewAllAlerts;
+  /// Switches shell to Incidents tab (optional).
+  final VoidCallback? onOpenIncidents;
 
   const DashboardScreen({
     super.key,
     required this.incidents,
     this.onViewAllAlerts,
+    this.onOpenIncidents,
   });
 
   @override
@@ -118,14 +121,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const SizedBox(height: 12),
             _UpdatedStrip(isDark: isDark),
             const SizedBox(height: 18),
-            _AccentMetricCard(
-              isDark: isDark,
-              accent: _Ds.amber,
-              label: 'OPEN INCIDENTS',
-              value: '${_openIncidentsKpi()}',
-              footer: '+2 since last hour',
-              footerColor: _Ds.amber,
-              icon: Icons.emergency_outlined,
+            GestureDetector(
+              onTap: widget.onOpenIncidents,
+              child: _AccentMetricCard(
+                isDark: isDark,
+                accent: _Ds.amber,
+                label: 'OPEN INCIDENTS',
+                value: '${_openIncidentsKpi()}',
+                footer: '+2 since last hour',
+                footerColor: _Ds.amber,
+                icon: Icons.emergency_outlined,
+              ),
             ),
             const SizedBox(height: 12),
             _AccentMetricCard(
@@ -138,14 +144,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
               icon: Icons.verified_outlined,
             ),
             const SizedBox(height: 12),
-            _AccentMetricCard(
-              isDark: isDark,
-              accent: const Color(0xFFFF7B72),
-              label: 'CRITICAL ALERTS',
-              value: '${_criticalAlertsKpi()}',
-              footer: 'Active notifications',
-              footerColor: isDark ? _Ds.mute : Colors.black54,
-              icon: Icons.adjust,
+            GestureDetector(
+              onTap: widget.onViewAllAlerts,
+              child: _AccentMetricCard(
+                isDark: isDark,
+                accent: const Color(0xFFFF7B72),
+                label: 'CRITICAL ALERTS',
+                value: '${_criticalAlertsKpi()}',
+                footer: 'Active notifications',
+                footerColor: isDark ? _Ds.mute : Colors.black54,
+                icon: Icons.adjust,
+              ),
             ),
             const SizedBox(height: 18),
             Container(
