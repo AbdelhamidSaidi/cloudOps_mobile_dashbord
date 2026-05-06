@@ -27,4 +27,4 @@ flutter run
 - Update `lib/services/api_service.dart` and set `baseUrl` to your backend host or pass an explicit `baseUrl` when constructing `ApiService`.
 - The app uses the `http` package for REST calls.
 
-If you want, I can wire more screens or implement authentication flows next.
+
