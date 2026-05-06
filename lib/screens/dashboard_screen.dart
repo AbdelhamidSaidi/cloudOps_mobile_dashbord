@@ -12,6 +12,7 @@ class DashboardScreen extends StatefulWidget {
 
   /// Switches shell to Alerts tab (optional).
   final VoidCallback? onViewAllAlerts;
+
   /// Switches shell to Incidents tab (optional).
   final VoidCallback? onOpenIncidents;
 
@@ -90,9 +91,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       backgroundColor: bg,
       appBar: CloudOpsAppBar(
-        actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-        ],
+        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.search))],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, _navClearance),
@@ -102,167 +101,167 @@ class _DashboardScreenState extends State<DashboardScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-              'System Overview',
-              style: TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.w700,
-                color: onSurf,
-              ),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              'Real-time health and operational metrics across all clusters.',
-              style: TextStyle(
-                fontSize: 13,
-                height: 1.35,
-                color: isDark ? _Ds.mute : Colors.black54,
-              ),
-            ),
-            const SizedBox(height: 12),
-            _UpdatedStrip(isDark: isDark),
-            const SizedBox(height: 18),
-            GestureDetector(
-              onTap: widget.onOpenIncidents,
-              child: _AccentMetricCard(
-                isDark: isDark,
-                accent: _Ds.amber,
-                label: 'OPEN INCIDENTS',
-                value: '${_openIncidentsKpi()}',
-                footer: '+2 since last hour',
-                footerColor: _Ds.amber,
-                icon: Icons.emergency_outlined,
-              ),
-            ),
-            const SizedBox(height: 12),
-            _AccentMetricCard(
-              isDark: isDark,
-              accent: _Ds.accent,
-              label: 'SLA COMPLIANCE',
-              value: '98.5%',
-              footer: 'Target: 99.9%',
-              footerColor: _Ds.accent,
-              icon: Icons.verified_outlined,
-            ),
-            const SizedBox(height: 12),
-            GestureDetector(
-              onTap: widget.onViewAllAlerts,
-              child: _AccentMetricCard(
-                isDark: isDark,
-                accent: const Color(0xFFFF7B72),
-                label: 'CRITICAL ALERTS',
-                value: '${_criticalAlertsKpi()}',
-                footer: 'Active notifications',
-                footerColor: isDark ? _Ds.mute : Colors.black54,
-                icon: Icons.adjust,
-              ),
-            ),
-            const SizedBox(height: 18),
-            Container(
-              padding: const EdgeInsets.fromLTRB(14, 14, 14, 12),
-              decoration: BoxDecoration(
-                color: isDark ? _Ds.card : Colors.white.withValues(alpha: 0.95),
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(
-                  color: isDark
-                      ? _Ds.segmentHigh.withValues(alpha: 0.35)
-                      : GlassColors.lightBorder,
+                'System Overview',
+                style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.w700,
+                  color: onSurf,
                 ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Incident Trends',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 16,
-                                color: onSurf,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              _trend24h
-                                  ? '24-hour frequency distribution'
-                                  : '7-day frequency distribution',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: isDark ? _Ds.mute : Colors.black54,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(3),
-                        decoration: BoxDecoration(
-                          color: _Ds.track,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            _MiniSeg(
-                              label: '24H',
-                              sel: _trend24h,
-                              onTap: () =>
-                                  setState(() => _trend24h = true),
-                            ),
-                            _MiniSeg(
-                              label: '7D',
-                              sel: !_trend24h,
-                              onTap: () =>
-                                  setState(() => _trend24h = false),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+              const SizedBox(height: 6),
+              Text(
+                'Real-time health and operational metrics across all clusters.',
+                style: TextStyle(
+                  fontSize: 13,
+                  height: 1.35,
+                  color: isDark ? _Ds.mute : Colors.black54,
+                ),
+              ),
+              const SizedBox(height: 12),
+              _UpdatedStrip(isDark: isDark),
+              const SizedBox(height: 18),
+              GestureDetector(
+                onTap: widget.onOpenIncidents,
+                child: _AccentMetricCard(
+                  isDark: isDark,
+                  accent: _Ds.amber,
+                  label: 'OPEN INCIDENTS',
+                  value: '${_openIncidentsKpi()}',
+                  footer: '+2 since last hour',
+                  footerColor: _Ds.amber,
+                  icon: Icons.emergency_outlined,
+                ),
+              ),
+              const SizedBox(height: 12),
+              _AccentMetricCard(
+                isDark: isDark,
+                accent: _Ds.accent,
+                label: 'SLA COMPLIANCE',
+                value: '98.5%',
+                footer: 'Target: 99.9%',
+                footerColor: _Ds.accent,
+                icon: Icons.verified_outlined,
+              ),
+              const SizedBox(height: 12),
+              GestureDetector(
+                onTap: widget.onViewAllAlerts,
+                child: _AccentMetricCard(
+                  isDark: isDark,
+                  accent: const Color(0xFFFF7B72),
+                  label: 'CRITICAL ALERTS',
+                  value: '${_criticalAlertsKpi()}',
+                  footer: 'Active notifications',
+                  footerColor: isDark ? _Ds.mute : Colors.black54,
+                  icon: Icons.adjust,
+                ),
+              ),
+              const SizedBox(height: 18),
+              Container(
+                padding: const EdgeInsets.fromLTRB(14, 14, 14, 12),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? _Ds.card
+                      : Colors.white.withValues(alpha: 0.95),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(
+                    color: isDark
+                        ? _Ds.segmentHigh.withValues(alpha: 0.35)
+                        : GlassColors.lightBorder,
                   ),
-                  const SizedBox(height: 12),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(14),
-                    child: SizedBox(
-                      height: 180,
-                      width: double.infinity,
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          CustomPaint(
-                            painter: _GridLinePainter(
-                              isDark: isDark,
-                              wide: !_trend24h,
-                            ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Incident Trends',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 16,
+                                  color: onSurf,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                _trend24h
+                                    ? '24-hour frequency distribution'
+                                    : '7-day frequency distribution',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: isDark ? _Ds.mute : Colors.black54,
+                                ),
+                              ),
+                            ],
                           ),
-                          CustomPaint(
-                            painter: _TrendFillPainter(
-                              accent: _Ds.accent,
-                              wide: !_trend24h,
-                            ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(3),
+                          decoration: BoxDecoration(
+                            color: _Ds.track,
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                        ],
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              _MiniSeg(
+                                label: '24H',
+                                sel: _trend24h,
+                                onTap: () => setState(() => _trend24h = true),
+                              ),
+                              _MiniSeg(
+                                label: '7D',
+                                sel: !_trend24h,
+                                onTap: () => setState(() => _trend24h = false),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(14),
+                      child: SizedBox(
+                        height: 180,
+                        width: double.infinity,
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            CustomPaint(
+                              painter: _GridLinePainter(
+                                isDark: isDark,
+                                wide: !_trend24h,
+                              ),
+                            ),
+                            CustomPaint(
+                              painter: _TrendFillPainter(
+                                accent: _Ds.accent,
+                                wide: !_trend24h,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 14),
-            _PriorityCard(isDark: isDark, split: split),
-            const SizedBox(height: 18),
-            _RecentAlertsCard(
-              isDark: isDark,
-              onSurface: onSurf,
-              onViewAll: widget.onViewAllAlerts,
-            ),
-          ],
-        ),
+              const SizedBox(height: 14),
+              _PriorityCard(isDark: isDark, split: split),
+              const SizedBox(height: 18),
+              _RecentAlertsCard(
+                isDark: isDark,
+                onSurface: onSurf,
+                onViewAll: widget.onViewAllAlerts,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -283,7 +282,9 @@ class _UpdatedStrip extends StatelessWidget {
         color: isDark ? _Ds.card : Colors.white.withValues(alpha: 0.9),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: isDark ? _Ds.segmentHigh.withValues(alpha: 0.35) : GlassColors.lightBorder,
+          color: isDark
+              ? _Ds.segmentHigh.withValues(alpha: 0.35)
+              : GlassColors.lightBorder,
         ),
       ),
       child: Row(
@@ -316,11 +317,7 @@ class _MiniSeg extends StatelessWidget {
   final bool sel;
   final VoidCallback onTap;
 
-  const _MiniSeg({
-    required this.label,
-    required this.sel,
-    required this.onTap,
-  });
+  const _MiniSeg({required this.label, required this.sel, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -388,8 +385,9 @@ class _AccentMetricCard extends StatelessWidget {
                 color: isDark ? _Ds.card : Colors.white.withValues(alpha: 0.95),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color:
-                      isDark ? _Ds.segmentHigh.withValues(alpha: 0.35) : GlassColors.lightBorder,
+                  color: isDark
+                      ? _Ds.segmentHigh.withValues(alpha: 0.35)
+                      : GlassColors.lightBorder,
                 ),
               ),
               child: Column(
@@ -458,7 +456,9 @@ class _PriorityCard extends StatelessWidget {
         color: isDark ? _Ds.card : Colors.white.withValues(alpha: 0.95),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: isDark ? _Ds.segmentHigh.withValues(alpha: 0.35) : GlassColors.lightBorder,
+          color: isDark
+              ? _Ds.segmentHigh.withValues(alpha: 0.35)
+              : GlassColors.lightBorder,
         ),
       ),
       child: Column(
@@ -523,11 +523,23 @@ class _PriorityCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          _LegendRow(color: _Ds.coral, label: 'P1 - Critical', value: '${split.p1}'),
+          _LegendRow(
+            color: _Ds.coral,
+            label: 'P1 - Critical',
+            value: '${split.p1}',
+          ),
           const SizedBox(height: 8),
-          _LegendRow(color: _Ds.amber, label: 'P2 - High', value: '${split.p2}'),
+          _LegendRow(
+            color: _Ds.amber,
+            label: 'P2 - High',
+            value: '${split.p2}',
+          ),
           const SizedBox(height: 8),
-          _LegendRow(color: _Ds.segmentHigh, label: 'P3 - Routine', value: '${split.p3}'),
+          _LegendRow(
+            color: _Ds.segmentHigh,
+            label: 'P3 - Routine',
+            value: '${split.p3}',
+          ),
         ],
       ),
     );
@@ -593,7 +605,9 @@ class _RecentAlertsCard extends StatelessWidget {
         color: isDark ? _Ds.card : Colors.white.withValues(alpha: 0.95),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: isDark ? _Ds.segmentHigh.withValues(alpha: 0.35) : GlassColors.lightBorder,
+          color: isDark
+              ? _Ds.segmentHigh.withValues(alpha: 0.35)
+              : GlassColors.lightBorder,
         ),
       ),
       child: Column(
@@ -618,7 +632,10 @@ class _RecentAlertsCard extends StatelessWidget {
                 style: TextButton.styleFrom(
                   minimumSize: Size.zero,
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                 ),
                 child: const Text(
                   'View All',
@@ -738,13 +755,21 @@ class _RichAlertTile extends StatelessWidget {
                     children: tags.map((t) {
                       final custom = t.$2;
                       return Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
-                          color: custom ??
-                              (isDark ? const Color(0xFF30363D) : Colors.black12),
+                          color:
+                              custom ??
+                              (isDark
+                                  ? const Color(0xFF30363D)
+                                  : Colors.black12),
                           borderRadius: BorderRadius.circular(4),
                           border: t.$1 == 'CRITICAL'
-                              ? Border.all(color: _Ds.coral.withValues(alpha: 0.5))
+                              ? Border.all(
+                                  color: _Ds.coral.withValues(alpha: 0.5),
+                                )
                               : null,
                         ),
                         child: Text(
@@ -834,10 +859,7 @@ class _GridLinePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final bg = isDark ? _Ds.card : Colors.white.withValues(alpha: 0.95);
     canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        Offset.zero & size,
-        const Radius.circular(14),
-      ),
+      RRect.fromRectAndRadius(Offset.zero & size, const Radius.circular(14)),
       Paint()..color = bg,
     );
 
@@ -857,10 +879,7 @@ class _GridLinePainter extends CustomPainter {
       textAlign: TextAlign.center,
       textDirection: TextDirection.ltr,
     );
-    final textStyle = TextStyle(
-      fontSize: 10,
-      color: _Ds.mute,
-    );
+    final textStyle = TextStyle(fontSize: 10, color: _Ds.mute);
 
     for (var i = 0; i < labels.length; i++) {
       final x = 12.0 + (size.width - 24) * i / (labels.length - 1);

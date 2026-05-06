@@ -146,10 +146,7 @@ class _MainShellState extends State<MainShell> {
         fit: StackFit.expand,
         children: [
           Positioned.fill(
-            child: SafeArea(
-              bottom: false,
-              child: pages[_selectedIndex],
-            ),
+            child: SafeArea(bottom: false, child: pages[_selectedIndex]),
           ),
           if (_selectedIndex == 1)
             Positioned(
@@ -204,13 +201,19 @@ class _MainShellState extends State<MainShell> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: List.generate(4, (index) {
                         final items = [
-                          {'icon': Icons.grid_view_rounded, 'label': 'DASHBOARD'},
+                          {
+                            'icon': Icons.grid_view_rounded,
+                            'label': 'DASHBOARD',
+                          },
                           {'icon': Icons.gps_fixed, 'label': 'INCIDENTS'},
                           {
                             'icon': Icons.notifications_none_rounded,
                             'label': 'ALERTS',
                           },
-                          {'icon': Icons.person_outline_rounded, 'label': 'PROFILE'},
+                          {
+                            'icon': Icons.person_outline_rounded,
+                            'label': 'PROFILE',
+                          },
                         ];
                         final item = items[index];
                         final selected = _selectedIndex == index;
