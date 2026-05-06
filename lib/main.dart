@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'screens/profile_screen.dart';
 import 'screens/incidents_screen.dart';
 import 'screens/add_incident_page.dart';
+import 'screens/dashboard_screen.dart';
+import 'screens/alerts_screen.dart';
 import 'screens/login_screen.dart';
 import 'services/auth_service.dart';
 import 'services/theme_service.dart';
@@ -101,6 +103,7 @@ class _MainShellState extends State<MainShell> {
           service: service,
           severity: priority.split(' - ').first,
           age: 'now',
+          status: 'OPEN',
         ),
       );
     });
@@ -112,26 +115,49 @@ class _MainShellState extends State<MainShell> {
     });
   }
 
+  void _updateIncident(IncidentData updated) {
+    setState(() {
+      final i = _incidents.indexWhere((e) => e.id == updated.id);
+      if (i == -1) return;
+      _incidents[i] = updated;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final pages = <Widget>[
-      const Center(child: Text('Dashboard')),
-      IncidentsScreen(incidents: _incidents),
-      const Center(child: Text('Alerts')),
+      DashboardScreen(
+        incidents: _incidents,
+        onViewAllAlerts: () => _onItemTapped(2),
+        onOpenIncidents: () => _onItemTapped(1),
+      ),
+      IncidentsScreen(
+        incidents: _incidents,
+        onIncidentUpdated: _updateIncident,
+      ),
+      const AlertsScreen(),
       const ProfileScreen(),
     ];
 
     return Scaffold(
       body: Stack(
+        fit: StackFit.expand,
         children: [
-          SafeArea(child: pages[_selectedIndex]),
+          Positioned.fill(
+            child: SafeArea(bottom: false, child: pages[_selectedIndex]),
+          ),
           if (_selectedIndex == 1)
             Positioned(
               right: 18,
               bottom: 82,
               child: FloatingActionButton(
+                backgroundColor: const Color(0xFF58A6FF),
+                elevation: 6,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -140,7 +166,7 @@ class _MainShellState extends State<MainShell> {
                     ),
                   );
                 },
-                child: const Icon(Icons.add),
+                child: const Icon(Icons.add, color: Color(0xFF0D1117)),
               ),
             ),
           // Glassmorphic bottom navigation
@@ -175,21 +201,26 @@ class _MainShellState extends State<MainShell> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: List.generate(4, (index) {
                         final items = [
-                          {'icon': Icons.dashboard, 'label': 'DASHBOARD'},
-                          {'icon': Icons.report, 'label': 'INCIDENTS'},
                           {
-                            'icon': Icons.notification_important,
+                            'icon': Icons.grid_view_rounded,
+                            'label': 'DASHBOARD',
+                          },
+                          {'icon': Icons.gps_fixed, 'label': 'INCIDENTS'},
+                          {
+                            'icon': Icons.notifications_none_rounded,
                             'label': 'ALERTS',
                           },
-                          {'icon': Icons.person, 'label': 'PROFILE'},
+                          {
+                            'icon': Icons.person_outline_rounded,
+                            'label': 'PROFILE',
+                          },
                         ];
                         final item = items[index];
                         final selected = _selectedIndex == index;
-                        return GestureDetector(
-                          onTap: () => _onItemTapped(index),
-                          behavior: HitTestBehavior.opaque,
-                          child: SizedBox(
-                            width: 80,
+                        return Expanded(
+                          child: GestureDetector(
+                            onTap: () => _onItemTapped(index),
+                            behavior: HitTestBehavior.opaque,
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -205,6 +236,9 @@ class _MainShellState extends State<MainShell> {
                                 const SizedBox(height: 4),
                                 Text(
                                   item['label'] as String,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     color: selected
                                         ? Theme.of(
