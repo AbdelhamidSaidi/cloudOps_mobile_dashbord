@@ -8,6 +8,21 @@ class IncidentDetailScreen extends StatelessWidget {
 
   const IncidentDetailScreen({super.key, required this.incident});
 
+  String _escalatedSeverity(String raw) {
+    final s = raw.toUpperCase();
+    if (s.contains('CRITICAL') || s == 'P0') return 'CRITICAL';
+    if (s == 'HIGH' || s == 'P1') return 'CRITICAL';
+    if (s == 'LOW' || s == 'P2' || s == 'P3') return 'HIGH';
+    return 'HIGH';
+  }
+
+  bool _canEscalate() {
+    final sev = incident.severity.toUpperCase();
+    if (incident.status.toUpperCase() == 'RESOLVED') return false;
+    if (sev.contains('CRITICAL') || sev == 'P0') return false;
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -85,6 +100,16 @@ class IncidentDetailScreen extends StatelessWidget {
                               ),
                             ),
                           ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'STATUS: ${incident.status.replaceAll('_', ' ')}',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.6,
+                            color: Colors.white54,
+                          ),
                         ),
                       ],
                     ),
@@ -515,7 +540,17 @@ class IncidentDetailScreen extends StatelessWidget {
               const SizedBox(height: 12),
               // Action buttons
               ElevatedButton(
-                onPressed: () {},
+                onPressed: _canEscalate()
+                    ? () {
+                        final updated = incident.copyWith(
+                          severity: _escalatedSeverity(incident.severity),
+                          status: incident.status.toUpperCase() == 'OPEN'
+                              ? 'IN_PROGRESS'
+                              : incident.status,
+                        );
+                        Navigator.of(context).pop<IncidentData>(updated);
+                      }
+                    : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.redAccent,
                   minimumSize: const Size.fromHeight(48),
@@ -527,7 +562,12 @@ class IncidentDetailScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               OutlinedButton.icon(
-                onPressed: () {},
+                onPressed: incident.status.toUpperCase() == 'RESOLVED'
+                    ? null
+                    : () {
+                        final updated = incident.copyWith(status: 'RESOLVED');
+                        Navigator.of(context).pop<IncidentData>(updated);
+                      },
                 icon: const Icon(Icons.check_circle),
                 label: const Text('MARK AS RESOLVED'),
                 style: OutlinedButton.styleFrom(
